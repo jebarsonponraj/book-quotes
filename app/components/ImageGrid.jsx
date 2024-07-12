@@ -8,6 +8,7 @@ import book5 from "@/public/book5.jpg";
 import book6 from "@/public/book6.jpg";
 import paper1 from "@/public/paper1.jpg";
 
+
 const images = [
   [book1, book5, book3, paper1],
   [book2, book6, book4],
