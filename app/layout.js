@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#F7FAFC]`}>
+      <body className={`${inter.className} bg-[#F7FAFC] sm:h-screen sm:overflow-hidden`}>
       <ChakraProvider>
         {children}
       </ChakraProvider>
