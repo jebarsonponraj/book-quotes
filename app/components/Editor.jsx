@@ -287,7 +287,6 @@ const Editor = () => {
                   transformOrigin: "top left",
                   whiteSpace: "pre-wrap",
                   lineHeight: "1.2",
-                  mixBlendMode: "multiply",
                 }}
                 dangerouslySetInnerHTML={{ __html: inputData.input1.text.replace(/\n/g, '<br />') }}
               />
@@ -304,7 +303,6 @@ const Editor = () => {
                   transformOrigin: "top left",
                   whiteSpace: "pre-wrap",
                   lineHeight: "1.2",
-                  mixBlendMode: "multiply",
                 }}
                 dangerouslySetInnerHTML={{ __html: inputData.input2.text.replace(/\n/g, '<br />') }}
               />
