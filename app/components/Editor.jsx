@@ -217,7 +217,7 @@ const Editor = () => {
       // Create a link element to trigger the download
       const link = document.createElement("a");
       link.href = dataUrl;
-      link.download = "image_with_text.png";
+      link.download = "book_quote.png";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
