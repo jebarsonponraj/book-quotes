@@ -2,7 +2,8 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import ImageGrid from "./ImageGrid";
-import Input from "./Input";
+import Input from "./Input"; // Assuming Input1 component for first input
+import InputTwo from "./InputTwo"; // Assuming Input2 component for second input
 import book1 from "@/public/book1.jpeg";
 import book2 from "@/public/book2.jpg";
 import book3 from "@/public/book3.jpg";
@@ -14,57 +15,119 @@ import html2canvas from "html2canvas"; // Import html2canvas library
 
 const images = [book1, book5, book3, paper1, book2, book6, book4];
 
+
 const initialInputTextArr = [
   {
-    input1: "Jesus",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Jesus",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
   {
-    input1: "Jesus Christ",
-    fontSize: 14,
-    xAxis: 70,
-    yAxis: 100,
-    color: "#000000",
+    input1: {
+      text: "Jesus Christ",
+      fontSize: 14,
+      xAxis: 70,
+      yAxis: 100,
+      color: "#000000",
+    },
+    input2: {
+      text: "",
+      fontSize: 14,
+      xAxis: 70,
+      yAxis: 100,
+      color: "#000000",
+    },
   },
   {
-    input1: "Lord is Good",
-    input2: "His mercy endures forever",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Lord is Good",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "His mercy endures forever",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
   {
-    input1: "Day 50",
-    input2: "Pentecostal Day",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Day 50",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "Pentecostal Day",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
   {
-    input1: "Jesus Loves You",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Jesus Loves You",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
   {
-    input1: "Jesus the name above all names.",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Jesus the name above all names.",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
   {
-    input1: "Holy Holy Holy is The Lord of Hosts",
-    fontSize: 16,
-    xAxis: 50,
-    yAxis: 75,
-    color: "#000000",
+    input1: {
+      text: "Holy Holy Holy is The Lord of Hosts",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
+    input2: {
+      text: "",
+      fontSize: 16,
+      xAxis: 50,
+      yAxis: 75,
+      color: "#000000",
+    },
   },
 ];
 
@@ -79,8 +142,18 @@ const Editor = () => {
     setInputData(inputTextArr[index]);
   };
 
-  const handleInputChange = (updatedData) => {
-    const updatedInputData = { ...inputData, ...updatedData };
+  const handleInputChange1 = (updatedData) => {
+    const updatedInputData = { ...inputData, input1: { ...inputData.input1, ...updatedData } };
+    setInputData(updatedInputData);
+
+    const updatedInputTextArr = inputTextArr.map((item, idx) =>
+      idx === images.indexOf(selectedImage) ? updatedInputData : item
+    );
+    setInputTextArr(updatedInputTextArr);
+  };
+
+  const handleInputChange2 = (updatedData) => {
+    const updatedInputData = { ...inputData, input2: { ...inputData.input2, ...updatedData } };
     setInputData(updatedInputData);
 
     const updatedInputTextArr = inputTextArr.map((item, idx) =>
@@ -91,7 +164,7 @@ const Editor = () => {
 
   const handleDownload = () => {
     // Use html2canvas to capture the preview div
-    html2canvas(previewRef.current, {scale: 4}).then((canvas) => {
+    html2canvas(previewRef.current, { scale: 4 }).then((canvas) => {
       // Convert canvas to data URL
       const dataUrl = canvas.toDataURL("image/png");
 
@@ -106,37 +179,38 @@ const Editor = () => {
   };
 
   return (
-    <div>
+    <div className="grid grid-cols-1 sm:grid-cols-2">
+      <div className="m-8 sm:h-screen sm:overflow-auto flex flex-col gap-4">
+      <div className=" flex flex-col gap-3">
       {inputData.input1 && (
         <Input
-        key={`input1-${images.indexOf(selectedImage)}`}
-          input={inputData.input1}
+          key={`input1-${images.indexOf(selectedImage)}`}
+          input={inputData.input1.text}
           line="1"
-          initialFontSize={inputData.fontSize}
-          initialXAxis={inputData.xAxis}
-          initialYAxis={inputData.yAxis}
-          initialColor={inputData.color}
-          onChange={handleInputChange}
+          initialFontSize={inputData.input1.fontSize}
+          initialXAxis={inputData.input1.xAxis}
+          initialYAxis={inputData.input1.yAxis}
+          initialColor={inputData.input1.color}
+          onChange={handleInputChange1}
         />
       )}
-      {inputData.input2 && (
-        <Input
-        key={`input2-${images.indexOf(selectedImage)}`}
-          input={inputData.input2}
+     {inputData.input2 && inputData.input2.text && (
+        <InputTwo
+          key={`input2-${images.indexOf(selectedImage)}`}
+          input={inputData.input2.text}
           line="2"
-          initialFontSize={inputData.fontSize}
-          initialXAxis={inputData.xAxis}
-          initialYAxis={inputData.yAxis}
-          initialColor={inputData.color}
-          onChange={handleInputChange}
+          initialFontSize={inputData.input2.fontSize}
+          initialXAxis={inputData.input2.xAxis}
+          initialYAxis={inputData.input2.yAxis}
+          initialColor={inputData.input2.color}
+          onChange={handleInputChange2}
         />
       )}
+      </div>
       <ImageGrid onImageClick={handleImageClick} />
-      <div
-        
-        className="flex flex-col gap-7 items-center inset-0 -z-10 h-full w-full bg-white p-6 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
-      >
-        <div className="flex justify-between items-center w-full">
+      </div>
+      <div className="flex flex-col gap-7 sm:h-screen sm:overflow-auto items-center inset-0 -z-10 h-full w-full bg-white p-6 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <div className="flex justify-between items-center w-full ">
           <p className="text-xl">Preview</p>
           <button
             onClick={handleDownload}
@@ -147,36 +221,35 @@ const Editor = () => {
         </div>
         <div className="relative" ref={previewRef}>
           <Image
-          
             src={selectedImage}
-            width={300}
-            height={300}
+            width={500}
+            height={500}
             alt="selected book"
           />
           {inputData.input1 && (
             <p
               style={{
                 position: "absolute",
-                top: `${inputData.yAxis}px`,
-                left: `${inputData.xAxis}px`,
-                fontSize: `${inputData.fontSize}px`,
-                color: inputData.color,
+                top: `${inputData.input1.yAxis}px`,
+                left: `${inputData.input1.xAxis}px`,
+                fontSize: `${inputData.input1.fontSize}px`,
+                color: inputData.input1.color,
               }}
             >
-              {inputData.input1}
+              {inputData.input1.text}
             </p>
           )}
           {inputData.input2 && (
             <p
               style={{
                 position: "absolute",
-                top: `${parseInt(inputData.yAxis) + 20}px`, // Adjust spacing as needed
-                left: `${inputData.xAxis}px`,
-                fontSize: `${inputData.fontSize}px`,
-                color: inputData.color,
+                top: `${parseInt(inputData.input2.yAxis) + 20}px`, // Adjust spacing as needed
+                left: `${inputData.input2.xAxis}px`,
+                fontSize: `${inputData.input2.fontSize}px`,
+                color: inputData.input2.color,
               }}
             >
-              {inputData.input2}
+              {inputData.input2.text}
             </p>
           )}
         </div>

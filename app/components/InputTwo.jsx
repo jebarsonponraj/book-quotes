@@ -9,7 +9,7 @@ import {
     RangeSliderThumb,
 } from "@chakra-ui/react";
 
-const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initialColor, onChange }) => {
+const InputTwo = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initialColor, onChange }) => {
     const [color, setColor] = useState(initialColor);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [inputText, setInputText] = useState(()  => input);
@@ -169,4 +169,4 @@ const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initi
     );
 };
 
-export default Input;
+export default InputTwo;

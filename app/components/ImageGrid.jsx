@@ -15,7 +15,7 @@ const images = [
 
 const ImageGrid = ({ onImageClick }) => {
   return (
-    <div className="m-10">
+    <div className="w-full">
       <p className="font-semibold mb-2">Select a page template:</p>
       <div className="grid grid-cols-2 gap-3">
         {images.map((col, colIndex) => (
@@ -25,8 +25,8 @@ const ImageGrid = ({ onImageClick }) => {
                 key={index}
                 className="image-hover-effect rounded-md cursor-pointer"
                 src={src}
-                width={200}
-                height={200}
+                width={400}
+                height={400}
                 alt="image"
                 onClick={() => onImageClick(colIndex * 4 + index)} 
               />
