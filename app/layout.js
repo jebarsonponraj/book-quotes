@@ -17,6 +17,7 @@ export default function RootLayout({ children }) {
       <ChakraProvider>
         {children}
       </ChakraProvider>
+      <Analytics/>
         </body>
     </html>
   );
