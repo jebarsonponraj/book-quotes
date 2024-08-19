@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import ImageGrid from "./ImageGrid";
-import Input from "./Input"; // Assuming Input1 component for first input
-import InputTwo from "./InputTwo"; // Assuming Input2 component for second input
+import Input from "./Input";
+import InputTwo from "./InputTwo"; 
 import book1 from "@/public/book1.jpeg";
 import book2 from "@/public/book2.jpg";
 import book3 from "@/public/book3.jpg";
@@ -11,10 +11,12 @@ import book5 from "@/public/book5.jpg";
 import book6 from "@/public/book6.jpg";
 import paper1 from "@/public/paper1.jpg";
 import html2canvas from "html2canvas";
+import { supabase } from "../utils/supabase";
 import { toPng } from "html-to-image";
 import { initialInputTextArr, initialInputTextArrMobile } from "../constants/constants";
 
 const images = [book1, book5, book3, paper1, book2, book6, book4];
+const imageNames = ['book1', 'book5', 'book3', 'paper1', 'book2', 'book6', 'book4']; 
 
 const Editor = () => {
     const [selectedImage, setSelectedImage] = useState(book1);
@@ -80,20 +82,68 @@ const Editor = () => {
         setInputTextArr(updatedInputTextArr);
     };
 
-    const handleDownload = () => {
-        // Use html2canvas to capture the preview div
+    const updateDownloadCount = async (imageName) => {
+        try {
+            // Try to get the existing download count for the image
+            const { data, error, count } = await supabase
+                .from('downloads')
+                .select('download_count')
+                .eq('image_name', imageName);
+    
+            if (error) throw error;
+    
+            let newCount = 1;
+    
+            if (data && data.length > 0) {
+                // If the image exists, increment the count
+                newCount = data[0].download_count + 1;
+            }
+    
+            // Upsert the new download count
+            const { error: upsertError } = await supabase
+                .from('downloads')
+                .upsert({ image_name: imageName, download_count: newCount }, { onConflict: 'image_name' });
+    
+            if (upsertError) throw upsertError;
+    
+        } catch (error) {
+            console.error('Error updating download count:', error.message);
+        }
+    };
+    
+    
+
+    const handleDownload = async () => {
+        // Retrieve the counter from localStorage, or initialize it if it doesn't exist
+        let downloadCounter = parseInt(localStorage.getItem("downloadCounter")) || 0;
+    
+        // Increment the counter
+        downloadCounter += 1;
+    
+        // Save the updated counter back to localStorage
+        localStorage.setItem("downloadCounter", downloadCounter);
+    
+        // Use the counter in the filename
+        const fileName = `book_quote_${downloadCounter}.png`;
+    
+        // Get the actual image name
+        const imageName = imageNames[images.indexOf(selectedImage)];
+    
+        // Update the download count in the database
+        await updateDownloadCount(imageName);
+    
         html2canvas(previewRef.current, { scale: 4 }).then((canvas) => {
-          // Convert canvas to data URL
-          const dataUrl = canvas.toDataURL("image/png");
-          // Create a link element to trigger the download
-          const link = document.createElement("a");
-          link.href = dataUrl;
-          link.download = "book_quote.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
-      };
+    };
+    
+    
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-3">
