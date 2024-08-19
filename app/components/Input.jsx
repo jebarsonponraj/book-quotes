@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Settings } from "lucide-react";
 import {
@@ -10,14 +10,38 @@ import {
 } from "@chakra-ui/react";
 
 const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initialColor, initialRotation, onChange }) => {
+    const fontSizeRef = useRef(initialFontSize);
+    const xAxisRef = useRef(initialXAxis);
+    const yAxisRef = useRef(initialYAxis);
+    const colorRef = useRef(initialColor);
+    const rotationRef = useRef(initialRotation);
+
     const [color, setColor] = useState(initialColor);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [text, setText] = useState(()  => input);
-    const [lineText, setLineText] = useState(() => line);
-    const [fontSize, setFontSize] = useState(() => initialFontSize);
-    const [xAxis, setXAxis] = useState(() => initialXAxis);
-    const [yAxis, setYAxis] = useState(() => initialYAxis);
+    const [text, setText] = useState(input);
+    const [lineText, setLineText] = useState(line);
+    const [fontSize, setFontSize] = useState(initialFontSize);
+    const [xAxis, setXAxis] = useState(initialXAxis);
+    const [yAxis, setYAxis] = useState(initialYAxis);
     const [rotation, setRotation] = useState(initialRotation);
+
+    const handleReset = () => {
+        setFontSize(fontSizeRef.current);
+        setXAxis(xAxisRef.current);
+        setYAxis(yAxisRef.current);
+        setColor(colorRef.current);
+        setRotation(rotationRef.current);
+
+        onChange({
+            text,
+            fontSize: fontSizeRef.current,
+            xAxis: xAxisRef.current,
+            yAxis: yAxisRef.current,
+            color: colorRef.current,
+            rotation: rotationRef.current
+        });
+    };
+
 
     const handleInputChange = (e) => {
         setText(e.target.value);
@@ -49,6 +73,9 @@ const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initi
         onChange({ text, fontSize, xAxis, yAxis, rotation: value, color });
     };
 
+  
+    
+
     return (
         <div className="bg-white rounded shadow-sm">
             <div className="flex flex-col justify-between items-start p-4">
@@ -63,9 +90,19 @@ const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initi
                         onChange={handleInputChange}
                     ></textarea>
                 </label>
-                <div className="flex gap-1 items-center mt-1 hover:bg-slate-200 p-1 rounded-md cursor-pointer" onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
-                    <Settings className="w-4 h-4" />
-                    <p className="text-sm">{isSettingsOpen ? "Hide" : "Show"} Settings</p>
+                <div className="flex justify-between w-full items-center mt-1">
+                    <div className="flex gap-1 items-center hover:bg-slate-200 p-1 rounded-md cursor-pointer" onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
+                        <Settings className="w-4 h-4" />
+                        <p className="text-sm">{isSettingsOpen ? "Hide" : "Show"} Settings</p>
+                    </div>
+                    {isSettingsOpen && 
+                    <button
+                    className="text-sm font-medium hover:bg-slate-200 px-2 py-1 rounded-md cursor-pointer"
+                    onClick={handleReset}
+                    >
+                        Reset to Default
+                    </button>
+                    }
                 </div>
                 {isSettingsOpen && 
                     <div className="bg-[#F7FAFC] w-full flex flex-col gap-4 p-4">
@@ -188,18 +225,12 @@ const Input = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initi
                             </div>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <p className="text-md">Font Color</p>
-                                <input
-                                    type="text"
-                                    className="bg-white border border-[#CBD5E0] focus:border-black focus:outline-none focus:ring-0 w-28 h-8 pl-2"
-                                    value={color}
-                                    onChange={(e) => handleColorChange(e.target.value)}
-                                />
-                            </div>
-                            <div className="flex flex-col">
-                                <HexColorPicker className="w-full" color={color} onChange={handleColorChange} />
-                            </div>
+                            <p className="text-md">Color</p>
+                            <HexColorPicker
+                                className="w-full h-full"
+                                color={color}
+                                onChange={handleColorChange}
+                            />
                         </div>
                     </div>
                 }

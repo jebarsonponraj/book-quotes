@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Settings } from "lucide-react";
 import {
@@ -10,14 +10,38 @@ import {
 } from "@chakra-ui/react";
 
 const InputTwo = ({ input, line, initialFontSize, initialXAxis, initialYAxis, initialColor, initialRotation, onChange }) => {
+    const fontSizeRef = useRef(initialFontSize);
+    const xAxisRef = useRef(initialXAxis);
+    const yAxisRef = useRef(initialYAxis);
+    const colorRef = useRef(initialColor);
+    const rotationRef = useRef(initialRotation);
+
     const [color, setColor] = useState(initialColor);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [text, setText] = useState(()  => input);
-    const [lineText, setLineText] = useState(() => line);
-    const [fontSize, setFontSize] = useState(() => initialFontSize);
-    const [xAxis, setXAxis] = useState(() => initialXAxis);
-    const [yAxis, setYAxis] = useState(() => initialYAxis);
+    const [text, setText] = useState(input);
+    const [lineText, setLineText] = useState(line);
+    const [fontSize, setFontSize] = useState(initialFontSize);
+    const [xAxis, setXAxis] = useState(initialXAxis);
+    const [yAxis, setYAxis] = useState(initialYAxis);
     const [rotation, setRotation] = useState(initialRotation);
+
+    const handleReset = () => {
+        setFontSize(fontSizeRef.current);
+        setXAxis(xAxisRef.current);
+        setYAxis(yAxisRef.current);
+        setColor(colorRef.current);
+        setRotation(rotationRef.current);
+
+        onChange({
+            text,
+            fontSize: fontSizeRef.current,
+            xAxis: xAxisRef.current,
+            yAxis: yAxisRef.current,
+            color: colorRef.current,
+            rotation: rotationRef.current
+        });
+    };
+
 
     const handleInputChange = (e) => {
         setText(e.target.value);
@@ -63,9 +87,19 @@ const InputTwo = ({ input, line, initialFontSize, initialXAxis, initialYAxis, in
                         onChange={handleInputChange}
                     ></textarea>
                 </label>
-                <div className="flex gap-1 items-center mt-1 hover:bg-slate-200 p-1 rounded-md cursor-pointer" onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
-                    <Settings className="w-4 h-4" />
-                    <p className="text-sm">{isSettingsOpen ? "Hide" : "Show"} Settings</p>
+                <div className="flex justify-between w-full items-center mt-1">
+                    <div className="flex gap-1 items-center hover:bg-slate-200 p-1 rounded-md cursor-pointer" onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
+                        <Settings className="w-4 h-4" />
+                        <p className="text-sm">{isSettingsOpen ? "Hide" : "Show"} Settings</p>
+                    </div>
+                    {isSettingsOpen && 
+                    <button
+                    className="text-sm font-medium hover:bg-slate-200 px-2 py-1 rounded-md cursor-pointer"
+                    onClick={handleReset}
+                    >
+                        Reset to Default
+                    </button>
+                    }
                 </div>
                 {isSettingsOpen && 
                     <div className="bg-[#F7FAFC] w-full flex flex-col gap-4 p-4">
