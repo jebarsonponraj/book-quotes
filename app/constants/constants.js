@@ -262,8 +262,8 @@ export const initialInputTextArr = [
       input1: {
         text: "The Seed of Faith",
         fontSize: 14,
-        xAxis: 165,
-        yAxis: 192,
+        xAxis: 158,
+        yAxis: 165,
         color: "#000000",
         rotation: 18,
   
@@ -276,7 +276,7 @@ export const initialInputTextArr = [
   Years passed, and the child grew into an adult, facing challenges and uncertainties. Remembering her grandmother's wisdom, she planted seeds of hope and trust in her heart, nurturing them with faith.
   
   Just as her grandmother's garden bloomed with vibrant flowers, her life blossomed with resilience and joy, proving that from a tiny seed of faith, miracles can grow.`,
-        fontSize: 12,
+        fontSize: 11,
         xAxis: 104,
         yAxis: 155,
         color: "#000000",
