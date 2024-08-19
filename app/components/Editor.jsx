@@ -15,23 +15,28 @@ import { initialInputTextArr, initialInputTextArrMobile } from "../constants/con
 
 const images = [book1, book5, book3, paper1, book2, book6, book4];
 
-
-
 const Editor = () => {
     const [selectedImage, setSelectedImage] = useState(book1);
     const [inputTextArr, setInputTextArr] = useState(initialInputTextArr);
     const [inputData, setInputData] = useState(inputTextArr[0]);
     const previewRef = useRef(null);
 
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth <= 768) {
-                setInputTextArr(initialInputTextArrMobile);
-                setInputData(initialInputTextArrMobile[images.indexOf(selectedImage)]);
+                setInputTextArr((prevInputTextArr) => {
+                    const newArr = initialInputTextArrMobile;
+                    return newArr.map((item, idx) => 
+                        images.indexOf(selectedImage) === idx ? inputData : item
+                    );
+                });
             } else {
-                setInputTextArr(initialInputTextArr);
-                setInputData(initialInputTextArr[images.indexOf(selectedImage)]);
+                setInputTextArr((prevInputTextArr) => {
+                    const newArr = initialInputTextArr;
+                    return newArr.map((item, idx) => 
+                        images.indexOf(selectedImage) === idx ? inputData : item
+                    );
+                });
             }
         };
 
@@ -41,7 +46,7 @@ const Editor = () => {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [selectedImage]);
+    }, [selectedImage, inputData]);
 
     const handleImageClick = (index) => {
         setSelectedImage(images[index]);
