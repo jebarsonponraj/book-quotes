@@ -10,6 +10,7 @@ import book4 from "@/public/book4.jpg";
 import book5 from "@/public/book5.jpg";
 import book6 from "@/public/book6.jpg";
 import paper1 from "@/public/paper1.jpg";
+import html2canvas from "html2canvas";
 import { toPng } from "html-to-image";
 import { initialInputTextArr, initialInputTextArrMobile } from "../constants/constants";
 
@@ -80,21 +81,19 @@ const Editor = () => {
     };
 
     const handleDownload = () => {
-        const downloadHTML = document.getElementById("download");
-
-        console.log(downloadHTML);
-
-        toPng(downloadHTML, { cacheBust: false })
-            .then((dataUrl) => {
-                const link = document.createElement("a");
-                link.download = "my-image-name.png";
-                link.href = dataUrl;
-                link.click();
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+        // Use html2canvas to capture the preview div
+        html2canvas(previewRef.current, { scale: 4 }).then((canvas) => {
+          // Convert canvas to data URL
+          const dataUrl = canvas.toDataURL("image/png");
+          // Create a link element to trigger the download
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = "book_quote.png";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      };
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-3">
@@ -144,6 +143,7 @@ const Editor = () => {
                         id="download"
                         className="relative font-serif"
                         style={{ overflow: "hidden" }}
+                        ref={previewRef}
                     >
                         <img
                             src={selectedImage.src}
